@@ -13,15 +13,21 @@ import CannonDebugger from 'cannon-es-debugger'
 /**
  * Debug
  */
-const gui = new dat.GUI()
+const gui = new dat.GUI({width: 600})
 
 var guivalues = {
     velocityx: 25 ,
     velocityy: 7,
+    spheremass: 5,
+    boxmass: 1
 }
 
-gui.add(guivalues, 'velocityx', 0 , 100 , 1).name('Velocity X')
-gui.add(guivalues, 'velocityy', 0 , 100 , 1).name('Velocity Y')
+gui.add(guivalues, 'velocityx', 0 , 200 , 1).name('Sphere Velocity X')
+gui.add(guivalues, 'velocityy', 0 , 200 , 1).name('Sphere Velocity Y')
+gui.add(guivalues, 'spheremass', 0 , 100 , 1).name('Sphere Mass')
+gui.add(guivalues, 'boxmass', 0 , 100 , 1).name('Box Mass')
+
+
 
 
 
@@ -33,7 +39,7 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
-scene.background = new THREE.Color(0x3CA9EE);
+scene.background = new THREE.Color(0xADD9F7);
 
 
 /**
@@ -46,6 +52,7 @@ scene.background = new THREE.Color(0x3CA9EE);
 // physics
 const world = new CANNON.World();
 world.gravity.set(0, -9.82, 0);
+gui.add(world.gravity, 'y',-20,20,0.1).name('Gravity')
 
 const concretematerial = new CANNON.Material('concrete');
 const plasticmaterial = new CANNON.Material('plastic')
@@ -63,7 +70,7 @@ const sphereshape = new CANNON.Sphere(1)
 
 // create the body
 const spherebody = new CANNON.Body({
-    mass: 5,
+    mass: guivalues.spheremass,
     position: new CANNON.Vec3(-5, 1, 0),
     shape: sphereshape,
     material: plasticmaterial
@@ -89,7 +96,7 @@ for (let k = 5; k < 10; k++) {
     
             // create the body
             const cubebody = new CANNON.Body({
-                mass: 1,
+                mass: guivalues.boxmass,
                 position: new CANNON.Vec3(k *1.1, j + 1 * 1.1, -2 + index * 1.1),
                 shape: cubeshape,
                 material: plasticmaterial
