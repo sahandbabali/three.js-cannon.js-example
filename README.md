@@ -1,4 +1,4 @@
-Three.js Cannon.js implementation
+Three.js Cannon.js implementation.
 Press "s" to throw the ball.
 
 

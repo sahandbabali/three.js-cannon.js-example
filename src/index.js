@@ -83,26 +83,29 @@ world.addBody(spherebody)
 const cubesarray = [];
 
 
-for (let j = 0; j < 5; j++) {
-    for (let index = 0; index < 5; index++) {
-
-        // create the shape
-        const cubeshape = new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5));
-
-        // create the body
-        const cubebody = new CANNON.Body({
-            mass: 1,
-            position: new CANNON.Vec3(5, j + 1 * 1.1, -2 + index * 1.1),
-            shape: cubeshape,
-            material: plasticmaterial
-        })
-
-        world.addBody(cubebody)
-        cubesarray.push(cubebody)
-
-
-
+for (let k = 5; k < 10; k++) {
+    for (let j = 0; j < 5; j++) {
+        for (let index = 0; index < 5; index++) {
+    
+            // create the shape
+            const cubeshape = new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5));
+    
+            // create the body
+            const cubebody = new CANNON.Body({
+                mass: 1,
+                position: new CANNON.Vec3(k *1.1, j + 1 * 1.1, -2 + index * 1.1),
+                shape: cubeshape,
+                material: plasticmaterial
+            })
+    
+            world.addBody(cubebody)
+            cubesarray.push(cubebody)
+    
+    
+    
+        }
     }
+    
 }
 
 
@@ -133,7 +136,7 @@ world.addBody(floorbody)
  */
 const sphere = new THREE.Mesh(
     new THREE.SphereBufferGeometry(1, 32, 32),
-    new THREE.MeshStandardMaterial({
+    new THREE.MeshLambertMaterial({
         metalness: 0.3,
         roughness: 0.4,
     })
@@ -146,8 +149,8 @@ scene.add(sphere)
  * Floor
  */
 const floor = new THREE.Mesh(
-    new THREE.PlaneBufferGeometry(20, 10),
-    new THREE.MeshStandardMaterial({
+    new THREE.PlaneBufferGeometry(25, 10),
+    new THREE.MeshLambertMaterial({
         color: '#777777',
         metalness: 0.3,
         roughness: 0.4,
@@ -162,26 +165,30 @@ scene.add(floor)
 
 const cubesarraythree = [];
 
+for (let k = 5; k < 10; k++) {
 
-for (let j = 0; j < 5; j++) {
-    for (let index = 0; index < 5; index++) {
-
-        const box = new THREE.Mesh(
-            new THREE.BoxBufferGeometry(1, 1, 1),
-            new THREE.MeshStandardMaterial({
-                metalness: 0.3,
-                roughness: 1,
-                color: 0xffffff
-            })
-        )
-        box.castShadow = true
-        scene.add(box)
-        cubesarraythree.push(box)
-
-
-
+    for (let j = 0; j < 5; j++) {
+        for (let index = 0; index < 5; index++) {
+    
+            const box = new THREE.Mesh(
+                new THREE.BoxBufferGeometry(1, 1, 1),
+                new THREE.MeshLambertMaterial({
+                    metalness: 0.3,
+                    roughness: 1,
+                    color: 0xffffff
+                })
+            )
+            box.castShadow = true
+            scene.add(box)
+            cubesarraythree.push(box)
+    
+    
+    
+        }
     }
 }
+
+
 
 
 
@@ -191,7 +198,7 @@ for (let j = 0; j < 5; j++) {
 /**
  * Lights
  */
-const ambientLight = new THREE.AmbientLight(0xffffff, 1)
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.6)
 scene.add(ambientLight)
 
 const directionalLight = new THREE.DirectionalLight(0xffffff, 0.2)
@@ -270,14 +277,17 @@ window.onkeypress = function (event) {
 
     // console.log(event.keyCode)
     if (event.keyCode == 115) {
-        spherebody.applyLocalForce(new CANNON.Vec3(5000, 2000, 0), new CANNON.Vec3(0, 0, 0))
+        // spherebody.applyLocalForce(new CANNON.Vec3(5000, 2000, 0), new CANNON.Vec3(0, 0, 0))
+        spherebody.velocity = new CANNON.Vec3(25,7, 0);
+
+
     }
 }
 
 
-// const cannonDebugger = new CannonDebugger(scene, world, {
-//     // options...
-// })
+const cannonDebugger = new CannonDebugger(scene, world, {
+    // options...
+})
 
 
 /**
@@ -300,13 +310,14 @@ const tick = () => {
     // console.log(spherebody.position.y)
 
     sphere.position.copy(spherebody.position)
+    sphere.quaternion.copy(spherebody.quaternion)
 
 
     cubesarraythree.forEach(cubereposition)
 
     function cubereposition(item, index, arr) {
-        cubesarraythree[index].position.copy(cubesarray[index].position)
-        cubesarraythree[index].quaternion.copy(cubesarray[index].quaternion)
+        arr[index].position.copy(cubesarray[index].position)
+        arr[index].quaternion.copy(cubesarray[index].quaternion)
 
 
     }
@@ -316,7 +327,7 @@ const tick = () => {
     // Update controls
     controls.update()
 
-    // cannonDebugger.update()
+    cannonDebugger.update()
 
     // Render
     renderer.render(scene, camera)
