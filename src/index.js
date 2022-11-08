@@ -5,7 +5,7 @@ import '@/styles/index.scss'
 
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-// import * as dat from 'dat.gui'
+import * as dat from 'dat.gui'
 import * as CANNON from 'cannon-es'
 const axesHelper = new THREE.AxesHelper(1);
 import CannonDebugger from 'cannon-es-debugger'
@@ -13,7 +13,17 @@ import CannonDebugger from 'cannon-es-debugger'
 /**
  * Debug
  */
-// const gui = new dat.GUI()
+const gui = new dat.GUI()
+
+var guivalues = {
+    velocityx: 25 ,
+    velocityy: 7,
+}
+
+gui.add(guivalues, 'velocityx', 0 , 100 , 1).name('Velocity X')
+gui.add(guivalues, 'velocityy', 0 , 100 , 1).name('Velocity Y')
+
+
 
 /**
  * Base
@@ -66,19 +76,6 @@ world.addBody(spherebody)
 // +++++++++++++++++++++++++++++++++++++++++++++++++
 // add cube body
 // +++++++++++++++++++++++++++++++++++++++++++++++++
-
-// // create the shape
-// const cubeshape = new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5));
-
-// // create the body
-// const cubebody = new CANNON.Body({
-//     mass: 1,
-//     position: new CANNON.Vec3(5, 1, 0),
-//     shape: cubeshape,
-//     material: plasticmaterial
-// })
-
-// world.addBody(cubebody)
 
 const cubesarray = [];
 
@@ -137,8 +134,7 @@ world.addBody(floorbody)
 const sphere = new THREE.Mesh(
     new THREE.SphereBufferGeometry(1, 32, 32),
     new THREE.MeshLambertMaterial({
-        metalness: 0.3,
-        roughness: 0.4,
+      color: '#ff0000'
     })
 )
 sphere.castShadow = true
@@ -152,8 +148,7 @@ const floor = new THREE.Mesh(
     new THREE.PlaneBufferGeometry(25, 10),
     new THREE.MeshLambertMaterial({
         color: '#777777',
-        metalness: 0.3,
-        roughness: 0.4,
+    
     })
 )
 floor.receiveShadow = true
@@ -173,8 +168,7 @@ for (let k = 5; k < 10; k++) {
             const box = new THREE.Mesh(
                 new THREE.BoxBufferGeometry(1, 1, 1),
                 new THREE.MeshLambertMaterial({
-                    metalness: 0.3,
-                    roughness: 1,
+                
                     color: 0xffffff
                 })
             )
@@ -204,11 +198,11 @@ scene.add(ambientLight)
 const directionalLight = new THREE.DirectionalLight(0xffffff, 0.2)
 directionalLight.castShadow = true
 directionalLight.shadow.mapSize.set(1024, 1024)
-directionalLight.shadow.camera.far = 15
-directionalLight.shadow.camera.left = - 7
-directionalLight.shadow.camera.top = 7
-directionalLight.shadow.camera.right = 7
-directionalLight.shadow.camera.bottom = - 7
+// directionalLight.shadow.camera.far = 15
+// directionalLight.shadow.camera.left = - 7
+// directionalLight.shadow.camera.top = 7
+// directionalLight.shadow.camera.right = 7
+// directionalLight.shadow.camera.bottom = - 7
 directionalLight.position.set(5, 5, 5)
 scene.add(directionalLight)
 
@@ -264,8 +258,8 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 scene.add(axesHelper);
 
 // grid helper
-const size = 20;
-const divisions = 20;
+// const size = 20;
+// const divisions = 20;
 
 // const gridHelper = new THREE.GridHelper(size, divisions);
 // scene.add(gridHelper);
@@ -278,16 +272,16 @@ window.onkeypress = function (event) {
     // console.log(event.keyCode)
     if (event.keyCode == 115) {
         // spherebody.applyLocalForce(new CANNON.Vec3(5000, 2000, 0), new CANNON.Vec3(0, 0, 0))
-        spherebody.velocity = new CANNON.Vec3(25,7, 0);
+        spherebody.velocity = new CANNON.Vec3(guivalues.velocityx,guivalues.velocityy, 0);
 
 
     }
 }
 
 
-const cannonDebugger = new CannonDebugger(scene, world, {
-    // options...
-})
+// const cannonDebugger = new CannonDebugger(scene, world, {
+//     // options...
+// })
 
 
 /**
@@ -327,7 +321,7 @@ const tick = () => {
     // Update controls
     controls.update()
 
-    cannonDebugger.update()
+    // cannonDebugger.update()
 
     // Render
     renderer.render(scene, camera)
