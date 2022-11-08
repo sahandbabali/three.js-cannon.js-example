@@ -13,7 +13,7 @@ import CannonDebugger from 'cannon-es-debugger'
 /**
  * Debug
  */
-const gui = new dat.GUI({width: 600})
+const gui = new dat.GUI({width: 500})
 
 var guivalues = {
     velocityx: 25 ,
@@ -199,10 +199,10 @@ for (let k = 5; k < 10; k++) {
 /**
  * Lights
  */
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.6)
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.7)
 scene.add(ambientLight)
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.2)
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5)
 directionalLight.castShadow = true
 directionalLight.shadow.mapSize.set(1024, 1024)
 // directionalLight.shadow.camera.far = 15
@@ -262,7 +262,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 
 
-scene.add(axesHelper);
+// scene.add(axesHelper);
 
 // grid helper
 // const size = 20;
