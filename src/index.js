@@ -8,8 +8,8 @@ const axesHelper = new THREE.AxesHelper(1);
 import CannonDebugger from 'cannon-es-debugger'
 import Stats from 'three/examples/jsm/libs/stats.module'
 
-const stats = Stats()
-document.body.appendChild(stats.dom)
+// const stats = Stats()
+// document.body.appendChild(stats.dom)
 
 
 /**
@@ -129,11 +129,11 @@ for (let k = 5; k < 10; k++) {
 
 
 // adding the floor body
-const floorshape = new CANNON.Plane();
+const floorshape = new CANNON.Box(new CANNON.Vec3(20, 1, 10));
 
 const floorbody = new CANNON.Body();
-floorbody.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 0,), Math.PI * 0.5)
-
+// floorbody.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 0,), Math.PI * 0.5)
+floorbody.position = new CANNON.Vec3(0, -1, 0,)
 floorbody.mass = 0
 floorbody.addShape(floorshape)
 floorbody.material = concretematerial
@@ -159,12 +159,13 @@ scene.add(sphere)
  * Floor
  */
 const floor = new THREE.Mesh(
-    new THREE.PlaneBufferGeometry(100, 100),
+    new THREE.BoxBufferGeometry(40,20, 2),
     new THREE.MeshLambertMaterial({
         color: '#777777',
 
     })
 )
+floor.position.y -= 1
 floor.receiveShadow = true
 floor.rotation.x = - Math.PI * 0.5
 scene.add(floor)
@@ -239,7 +240,7 @@ window.addEventListener('resize', () => {
  * Camera
  */
 // Base camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 300)
 camera.position.set(-10, 6, 6)
 scene.add(camera)
 camera.lookAt(sphere.position)
@@ -288,9 +289,7 @@ window.onkeypress = function (event) {
 //     // options...
 // })
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++
-// collision detection
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 
 
@@ -332,7 +331,7 @@ const tick = () => {
     // controls.target.copy(sphere.position)
 
     controls.update()
-    stats.update()
+    // stats.update()
 
     // cannonDebugger.update()
 
